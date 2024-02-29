@@ -1,17 +1,19 @@
-export type CharacterDataJson = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  species: string;
-  age: string;
-  gender: string;
-  role: string;
-  background: string;
-  place_of_birth: string;
-  physical_appearance: string[];
-  image?: string | null;
-  original_image?: string | null;
-};
+import { z } from "zod";
+
+export const CharacterDataJson = z.object({
+  id: z.number(),
+  first_name: z.string(),
+  last_name: z.string(),
+  species: z.string(),
+  age: z.string(),
+  gender: z.string(),
+  role: z.string(),
+  background: z.string(),
+  place_of_birth: z.string(),
+  physical_appearance: z.array(z.string()),
+  image: z.string().nullable(),
+  original_image: z.string().nullable()
+});
 
 export class CharacterData {
   id: number;
@@ -24,8 +26,8 @@ export class CharacterData {
   background: string;
   placeOfBirth: string;
   physicalAppearance: string[];
-  image?: string | null;
-  originalImage?: string | null;
+  image: string | null;
+  originalImage: string | null;
 
   constructor(
     id: number,
@@ -63,24 +65,26 @@ export class CharacterData {
     this.originalImage = originalImage;
   }
 
-  static fromJson(jsonObj: CharacterDataJson): CharacterData {
+  static fromJson(jsonObj: z.infer<typeof CharacterDataJson>): CharacterData {
+    const parsed = CharacterDataJson.parse(jsonObj);
+
     return new CharacterData(
-      jsonObj.id,
-      jsonObj.first_name,
-      jsonObj.last_name,
-      jsonObj.species,
-      jsonObj.age,
-      jsonObj.gender,
-      jsonObj.role,
-      jsonObj.background,
-      jsonObj.place_of_birth,
-      jsonObj.physical_appearance,
-      jsonObj.image ?? null,
-      jsonObj.original_image ?? null
+      parsed.id,
+      parsed.first_name,
+      parsed.last_name,
+      parsed.species,
+      parsed.age,
+      parsed.gender,
+      parsed.role,
+      parsed.background,
+      parsed.place_of_birth,
+      parsed.physical_appearance,
+      parsed.image,
+      parsed.original_image
     );
   }
 
-  toJson(): CharacterDataJson {
+  toJson(): z.infer<typeof CharacterDataJson> {
     return {
       id: this.id,
       first_name: this.firstName,

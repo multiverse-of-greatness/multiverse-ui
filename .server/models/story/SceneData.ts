@@ -1,17 +1,19 @@
-export type SceneDataJson = {
-  id: number;
-  title: string;
-  location: string;
-  description: string;
-  image?: string | null;
-};
+import { z } from "zod";
+
+export const SceneDataJson = z.object({
+  id: z.number(),
+  title: z.string(),
+  location: z.string(),
+  description: z.string(),
+  image: z.string().nullable(),
+})
 
 export class SceneData {
   id: number;
   title: string;
   location: string;
   description: string;
-  image?: string | null;
+  image: string | null;
 
   constructor(id: number, title: string, location: string, description: string, image: string | null = null) {
     this.id = id;
@@ -21,11 +23,12 @@ export class SceneData {
     this.image = image;
   }
 
-  static fromJson(jsonObj: SceneDataJson): SceneData {
-    return new SceneData(jsonObj.id, jsonObj.title, jsonObj.location, jsonObj.description, jsonObj.image);
+  static fromJson(jsonObj: z.infer<typeof SceneDataJson>): SceneData {
+    const parsed = SceneDataJson.parse(jsonObj);
+    return new SceneData(parsed.id, parsed.title, parsed.location, parsed.description, parsed.image);
   }
 
-  toJson(): SceneDataJson {
+  toJson(): z.infer<typeof SceneDataJson> {
     return {
       id: this.id,
       title: this.title,

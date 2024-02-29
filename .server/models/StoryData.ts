@@ -3,19 +3,21 @@ import { CharacterData, CharacterDataJson } from './story/CharacterData';
 import { EndingData, EndingDataJson } from './story/EndingData';
 import { SceneData, SceneDataJson } from './story/SceneData';
 
-export type StoryDataJson = {
-    "id": string,
-    "title": string,
-    "genre": string,
-    "themes": string[],
-    "main_scenes": SceneDataJson[],
-    "main_characters": CharacterDataJson[],
-    "synopsis": string,
-    "chapter_synopses": ChapterSynopsisJson[],
-    "beginning": string,
-    "endings": EndingDataJson[],
-    "generated_by": string
-};
+import { z } from 'zod';
+
+export const StoryDataJson = z.object({
+    "id": z.string(),
+    "title": z.string(),
+    "genre": z.string(),
+    "themes": z.array(z.string()),
+    "main_scenes": z.array(SceneDataJson),
+    "main_characters": z.array(CharacterDataJson),
+    "synopsis": z.string(),
+    "chapter_synopses": z.array(ChapterSynopsisJson),
+    "beginning": z.string(),
+    "endings": z.array(EndingDataJson),
+    "generated_by": z.string()
+})
 
 export class StoryData {
     id: string;
@@ -45,20 +47,16 @@ export class StoryData {
         this.generatedBy = generatedBy;
     }
 
-    static fromJson(jsonObj: StoryDataJson): StoryData {
-        return new StoryData(
-            jsonObj['id'], jsonObj['title'], jsonObj['genre'], jsonObj['themes'],
-            jsonObj['main_scenes'].map((scene: SceneDataJson) => SceneData.fromJson(scene)),
-            jsonObj['main_characters'].map((character: CharacterDataJson) => CharacterData.fromJson(character)),
-            jsonObj['synopsis'],
-            jsonObj['chapter_synopses'].map((chapterSynopsis: ChapterSynopsisJson) => ChapterSynopsis.fromJson(chapterSynopsis)),
-            jsonObj['beginning'],
-            jsonObj['endings'].map((ending: EndingDataJson) => EndingData.fromJson(ending)),
-            jsonObj['generated_by']
-        );
+    static fromJson(jsonObj: typeof StoryDataJson): StoryData {
+        const parsed = StoryDataJson.parse(jsonObj);
+        return new StoryData(parsed.id, parsed.title, parsed.genre, parsed.themes,
+            parsed.main_scenes.map((scene) => SceneData.fromJson(scene)),
+            parsed.main_characters.map((character) => CharacterData.fromJson(character)), parsed.synopsis,
+            parsed.chapter_synopses.map((chapterSynopsis) => ChapterSynopsis.fromJson(chapterSynopsis)),
+            parsed.beginning, parsed.endings.map((ending) => EndingData.fromJson(ending)), parsed.generated_by);
     }
 
-    toJson(): StoryDataJson {
+    toJson(): z.infer<typeof StoryDataJson> {
         return {
             'id': this.id,
             'title': this.title,

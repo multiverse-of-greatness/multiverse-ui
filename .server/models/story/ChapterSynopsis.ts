@@ -1,9 +1,11 @@
-export type ChapterSynopsisJson = {
-  chapter: number;
-  synopsis: string;
-  character_ids: number[];
-  scene_ids: number[];
-};
+import { z } from "zod";
+
+export const ChapterSynopsisJson = z.object({
+  chapter: z.number(),
+  synopsis: z.string(),
+  character_ids: z.array(z.number()),
+  scene_ids: z.array(z.number())
+});
 
 export class ChapterSynopsis {
   chapter: number;
@@ -18,11 +20,12 @@ export class ChapterSynopsis {
     this.sceneIds = sceneIds;
   }
 
-  static fromJson(jsonObj: ChapterSynopsisJson): ChapterSynopsis {
-    return new ChapterSynopsis(jsonObj.chapter, jsonObj.synopsis, jsonObj.character_ids, jsonObj.scene_ids);
+  static fromJson(jsonObj: z.infer<typeof ChapterSynopsisJson>): ChapterSynopsis {
+    const parsed = ChapterSynopsisJson.parse(jsonObj);
+    return new ChapterSynopsis(parsed.chapter, parsed.synopsis, parsed.character_ids, parsed.scene_ids);
   }
 
-  toJson(): ChapterSynopsisJson {
+  toJson(): z.infer<typeof ChapterSynopsisJson> {
     return {
       chapter: this.chapter,
       synopsis: this.synopsis,
