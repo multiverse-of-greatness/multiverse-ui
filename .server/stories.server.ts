@@ -98,9 +98,9 @@ export const getFirstStoryChunk = async (storyId: string) => {
     const responses = await session.executeRead(txc => txc.run<getFirstStoryChunkResponse>(getFirstStoryChunkQuery, { storyId }));
     const filteredResponses = responses.records.filter(record => record !== undefined)
     const chunk_response = filteredResponses[0].get('chunk').properties;
-    const stories = z.array(StoryNarrativeJson).parse(JSON.parse(chunk_response.story)).map(narrative => StoryNarrative.from_json(narrative));
+    const stories = z.array(StoryNarrativeJson).parse(JSON.parse(chunk_response.story)).map(narrative => StoryNarrative.fromJson(narrative));
     const choices_response = filteredResponses.map(record => record.get('branch').properties).map(choice => ({ ...choice, id: choice.id.toNumber() }));
-    const choices = choices_response.map(choice => StoryChoice.from_json(choice));
+    const choices = choices_response.map(choice => StoryChoice.fromJson(choice));
     const storyChunk = new StoryChunk(chunk_response.id,
       chunk_response.chapter.toNumber(),
       chunk_response.story_so_far,

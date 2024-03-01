@@ -16,57 +16,57 @@ export const StoryChunkJson = z.object({
 export class StoryChunk {
     id: string;
     chapter: number;
-    story_so_far: string;
+    storySoFar: string;
     story: StoryNarrative[];
     choices: StoryChoice[];
-    story_id: string;
+    storyId: string;
     num_opportunities: number;
 
     constructor(
         id: string,
         chapter: number,
-        story_so_far: string,
+        storySoFar: string,
         story: StoryNarrative[],
         choices: StoryChoice[],
-        story_id: string,
+        storyId: string,
         num_opportunities: number,
     ) {
         this.id = id;
         this.chapter = chapter;
-        this.story_so_far = story_so_far;
+        this.storySoFar = storySoFar;
         this.story = story;
         this.choices = choices;
-        this.story_id = story_id;
+        this.storyId = storyId;
         this.num_opportunities = num_opportunities;
     }
 
-    static from_json(json_obj: z.infer<typeof StoryChunkJson>): StoryChunk {
-        const narratives = json_obj.story ? json_obj.story : [];
-        const choices = json_obj.choices ? json_obj.choices : [];
+    static fromJson(jsonObj: z.infer<typeof StoryChunkJson>): StoryChunk {
+        const narratives = jsonObj.story ? jsonObj.story : [];
+        const choices = jsonObj.choices ? jsonObj.choices : [];
         return new StoryChunk(
-            json_obj.id,
-            json_obj.chapter,
-            json_obj.story_so_far,
-            narratives.map((narrative) => StoryNarrative.from_json(narrative)),
-            choices.map((choice) => StoryChoice.from_json(choice)),
-            json_obj.story_id,
-            json_obj.num_opportunities,
+            jsonObj.id,
+            jsonObj.chapter,
+            jsonObj.story_so_far,
+            narratives.map((narrative) => StoryNarrative.fromJson(narrative)),
+            choices.map((choice) => StoryChoice.fromJson(choice)),
+            jsonObj.story_id,
+            jsonObj.num_opportunities,
         );
     }
 
-    to_json(): z.infer<typeof StoryChunkJson> {
+    toJson(): z.infer<typeof StoryChunkJson> {
         return {
             id: this.id,
             chapter: this.chapter,
-            story_so_far: this.story_so_far,
-            story: this.story.map((narrative: StoryNarrative) => narrative.to_json()),
-            choices: this.choices.map((choice: StoryChoice) => choice.to_json()),
-            story_id: this.story_id,
+            story_so_far: this.storySoFar,
+            story: this.story.map((narrative: StoryNarrative) => narrative.toJson()),
+            choices: this.choices.map((choice: StoryChoice) => choice.toJson()),
+            story_id: this.storyId,
             num_opportunities: this.num_opportunities,
         };
     }
 
     toString(): string {
-        return `StoryChunk(id=${this.id}, chapter=${this.chapter}, story_so_far=${this.story_so_far}, story=[${this.story.map((n: StoryNarrative) => n.toString())}], choices=[${this.choices.map((c: StoryChoice) => c.toString())}])`;
+        return `StoryChunk(id=${this.id}, chapter=${this.chapter}, story_so_far=${this.storySoFar}, story=[${this.story.map((n: StoryNarrative) => n.toString())}], choices=[${this.choices.map((c: StoryChoice) => c.toString())}])`;
     }
 }

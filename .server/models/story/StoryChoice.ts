@@ -17,7 +17,7 @@ export class StoryChoice {
     this.description = description;
   }
 
-  static from_json(json_obj: z.infer<typeof StoryChoiceJson>): StoryChoice {
+  static fromJson(json_obj: z.infer<typeof StoryChoiceJson>): StoryChoice {
     const parsed = StoryChoiceJson.parse(json_obj);
     return new StoryChoice(
       parsed.id,
@@ -26,7 +26,7 @@ export class StoryChoice {
     );
   }
 
-  to_json(): z.infer<typeof StoryChoiceJson> {
+  toJson(): z.infer<typeof StoryChoiceJson> {
     return {
       id: this.id,
       choice: this.choice,

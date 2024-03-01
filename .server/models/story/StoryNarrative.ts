@@ -12,22 +12,22 @@ export const StoryNarrativeJson = z.object({
 export class StoryNarrative {
   id: number;
   speaker: string;
-  speaker_id: number;
-  scene_title: string;
-  scene_id: number;
+  speakerId: number;
+  sceneTitle: string;
+  sceneId: number;
   text: string;
 
-  constructor(id: number, speaker: string, speaker_id: number, scene_title: string, scene_id: number, text: string) {
+  constructor(id: number, speaker: string, speakerId: number, sceneTitle: string, sceneId: number, text: string) {
     this.id = id;
     this.speaker = speaker;
-    this.speaker_id = speaker_id;
-    this.scene_title = scene_title;
-    this.scene_id = scene_id;
+    this.speakerId = speakerId;
+    this.sceneTitle = sceneTitle;
+    this.sceneId = sceneId;
     this.text = text;
   }
 
-  static from_json(json_obj: z.infer<typeof StoryNarrativeJson>): StoryNarrative {
-    const parsed = StoryNarrativeJson.parse(json_obj);
+  static fromJson(jsonObj: z.infer<typeof StoryNarrativeJson>): StoryNarrative {
+    const parsed = StoryNarrativeJson.parse(jsonObj);
     return new StoryNarrative(
       parsed.id,
       parsed.speaker,
@@ -38,18 +38,18 @@ export class StoryNarrative {
     );
   }
 
-  to_json(): z.infer<typeof StoryNarrativeJson> {
+  toJson(): z.infer<typeof StoryNarrativeJson> {
     return {
       id: this.id,
       speaker: this.speaker,
-      speaker_id: this.speaker_id,
-      scene_title: this.scene_title,
-      scene_id: this.scene_id,
+      speaker_id: this.speakerId,
+      scene_title: this.sceneTitle,
+      scene_id: this.sceneId,
       text: this.text
     };
   }
 
   toString(): string {
-    return `StoryNarrative(id=${this.id}, speaker=${this.speaker}, speaker_id=${this.speaker_id}, scene_title=${this.scene_title}, scene_id=${this.scene_id}, text=${this.text})`;
+    return `StoryNarrative(id=${this.id}, speaker=${this.speaker}, speaker_id=${this.speakerId}, scene_title=${this.sceneTitle}, scene_id=${this.sceneId}, text=${this.text})`;
   }
 }

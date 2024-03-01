@@ -9,7 +9,7 @@ import { type MetaFunction } from '@remix-run/node';
 
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import GameScreen from '~/components/GameScreen';
+import GameScreen from '~/components/GameScreen/GameScreen';
 
 export const meta: MetaFunction = () => {
 	return [
