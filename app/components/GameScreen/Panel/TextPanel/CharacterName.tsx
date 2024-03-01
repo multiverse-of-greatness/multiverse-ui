@@ -1,13 +1,13 @@
 type CharacterNameProps = {
-	characterName: string;
+  characterName: string;
 };
 
 export default function CharacterName({
-	characterName,
+  characterName,
 }: Readonly<CharacterNameProps>) {
-	return (
-		<p className='text-white text-2xl lg:text-3xl 2xl:text-4xl font-bold text-center md:text-start'>
-			{characterName}
-		</p>
-	);
+  return (
+    <p className="text-center text-2xl font-bold text-white md:text-start lg:text-3xl 2xl:text-4xl">
+      {characterName}
+    </p>
+  );
 }

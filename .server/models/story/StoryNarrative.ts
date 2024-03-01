@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 export const StoryNarrativeJson = z.object({
-  "id": z.number(),
-  "speaker": z.string(),
-  "speaker_id": z.number(),
-  "scene_title": z.string(),
-  "scene_id": z.number(),
-  "text": z.string()
+  id: z.number(),
+  speaker: z.string(),
+  speaker_id: z.number(),
+  scene_title: z.string(),
+  scene_id: z.number(),
+  text: z.string(),
 });
 
 export class StoryNarrative {
@@ -17,7 +17,14 @@ export class StoryNarrative {
   sceneId: number;
   text: string;
 
-  constructor(id: number, speaker: string, speakerId: number, sceneTitle: string, sceneId: number, text: string) {
+  constructor(
+    id: number,
+    speaker: string,
+    speakerId: number,
+    sceneTitle: string,
+    sceneId: number,
+    text: string,
+  ) {
     this.id = id;
     this.speaker = speaker;
     this.speakerId = speakerId;
@@ -34,7 +41,7 @@ export class StoryNarrative {
       parsed.speaker_id,
       parsed.scene_title,
       parsed.scene_id,
-      parsed.text
+      parsed.text,
     );
   }
 
@@ -45,7 +52,7 @@ export class StoryNarrative {
       speaker_id: this.speakerId,
       scene_title: this.sceneTitle,
       scene_id: this.sceneId,
-      text: this.text
+      text: this.text,
     };
   }
 

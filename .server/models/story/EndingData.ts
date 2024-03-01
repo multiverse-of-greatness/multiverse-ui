@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const EndingDataJson = z.object({
   id: z.number(),
-  ending: z.string()
+  ending: z.string(),
 });
 
 export class EndingData {
@@ -22,7 +22,7 @@ export class EndingData {
   toJson(): z.infer<typeof EndingDataJson> {
     return {
       id: this.id,
-      ending: this.ending
+      ending: this.ending,
     };
   }
 

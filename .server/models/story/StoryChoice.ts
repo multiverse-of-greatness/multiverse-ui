@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const StoryChoiceJson = z.object({
-  "id": z.number(),
-  "choice": z.string(),
-  "description": z.string()
+  id: z.number(),
+  choice: z.string(),
+  description: z.string(),
 });
 
 export class StoryChoice {
@@ -19,18 +19,14 @@ export class StoryChoice {
 
   static fromJson(json_obj: z.infer<typeof StoryChoiceJson>): StoryChoice {
     const parsed = StoryChoiceJson.parse(json_obj);
-    return new StoryChoice(
-      parsed.id,
-      parsed.choice,
-      parsed.description
-    );
+    return new StoryChoice(parsed.id, parsed.choice, parsed.description);
   }
 
   toJson(): z.infer<typeof StoryChoiceJson> {
     return {
       id: this.id,
       choice: this.choice,
-      description: this.description
+      description: this.description,
     };
   }
 

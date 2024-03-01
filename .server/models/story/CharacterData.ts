@@ -12,7 +12,7 @@ export const CharacterDataJson = z.object({
   place_of_birth: z.string(),
   physical_appearance: z.array(z.string()),
   image: z.string().nullable(),
-  original_image: z.string().nullable()
+  original_image: z.string().nullable(),
 });
 
 export class CharacterData {
@@ -41,7 +41,7 @@ export class CharacterData {
     placeOfBirth: string,
     physicalAppearance: string[],
     image: string | null = null,
-    originalImage: string | null = null
+    originalImage: string | null = null,
   ) {
     this.id = id;
     this.firstName = firstName;
@@ -80,7 +80,7 @@ export class CharacterData {
       parsed.place_of_birth,
       parsed.physical_appearance,
       parsed.image,
-      parsed.original_image
+      parsed.original_image,
     );
   }
 
@@ -97,7 +97,7 @@ export class CharacterData {
       place_of_birth: this.placeOfBirth,
       physical_appearance: this.physicalAppearance,
       image: this.image,
-      original_image: this.originalImage
+      original_image: this.originalImage,
     };
   }
 
