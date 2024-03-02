@@ -54,7 +54,7 @@ export default function GameScreen({
   return (
     <div className="relative h-screen w-screen">
       <img
-        className="brightness-80 relative h-full w-full border-none bg-black object-cover"
+        className="brightness-80 relative h-full w-full border-none bg-slate object-cover"
         src={sceneBackgroundUrl}
         alt={scene?.title ?? "No image available."}
       />
