@@ -1,16 +1,17 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import {
+  ClientLoaderFunctionArgs,
+  redirect,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
+import { cacheClientLoader, useCachedLoaderData } from "remix-client-cache";
+import {
   getNextStoryChunkIdByChoiceId,
   getNextStoryChunkIdByChunkId,
   getStoryChunkByChunkId,
   getStoryDataById,
 } from ".server/stories.server";
-import {
-  redirect,
-  useLoaderData,
-  useSearchParams,
-  useSubmit,
-} from "@remix-run/react";
 
 import GameScreen from "~/components/GameScreen/GameScreen";
 import { StoryChunk } from ".server/models/StoryChunk";
@@ -22,6 +23,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const storyChunk = await getStoryChunkByChunkId(chunkId ?? "");
   return json({ storyData, storyChunk });
 };
+
+export const clientLoader = (args: ClientLoaderFunctionArgs) =>
+  cacheClientLoader(args);
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   const { storyId, chunkId } = params;
@@ -46,10 +50,11 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   return redirect(`/game/${storyId}/${nextChunkId}`);
 };
 
+clientLoader.hydrate = true;
 export default function Game() {
   const submit = useSubmit();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { storyData, storyChunk } = useLoaderData<typeof loader>();
+  const { storyData, storyChunk } = useCachedLoaderData<typeof loader>();
 
   const onNextDialog = (currentOrder: number) => {
     const params = new URLSearchParams();
@@ -72,10 +77,6 @@ export default function Game() {
         onChapterEnd={onChapterEnd}
         onNextDialog={onNextDialog}
       />
-      {/* <audio autoPlay={true} loop={true}>
-        <source src="/bgm.mp3" type="audio/mp3" />
-        <track kind="captions" />
-      </audio> */}
     </>
   );
 }
