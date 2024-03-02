@@ -1,12 +1,15 @@
 import CharacterImage from "./TextPanel/CharacterImage";
 import CharacterName from "./TextPanel/CharacterName";
 import DialogBox from "./TextPanel/DialogBox";
+import LoadingSpinner from "~/components/LoadingSpinner";
 
 type TextPanelProps = {
   speakerId: number;
   characterName: string;
   characterUrl: string;
   dialog: string;
+  isLoading: boolean;
+  haveChoicesShown: boolean;
   onNext: () => void;
 };
 
@@ -15,18 +18,26 @@ export default function TextPanel({
   characterName,
   characterUrl,
   dialog,
+  isLoading,
+  haveChoicesShown,
   onNext,
 }: Readonly<TextPanelProps>) {
   const isNarrator = speakerId === -1;
+  const isDisableClicked = isLoading || haveChoicesShown;
+
   return (
     <button
       onClick={onNext}
-      className="absolute bottom-0 left-0 h-1/2 w-full md:h-1/4"
+      className={`${haveChoicesShown && "hidden md:block"} absolute bottom-0 left-0 h-2/5 w-full md:h-1/4 ${isDisableClicked ? "cursor-not-allowed" : "cursor-pointer"}`}
+      disabled={isDisableClicked}
     >
+      {isLoading && (
+        <LoadingSpinner size="md" position="absolute" color="white" />
+      )}
       <div
-        className={`flex h-full w-full flex-col items-center gap-4 overflow-auto bg-black-80 px-16 py-8 text-start transition-all hover:bg-black-75 md:flex-row md:gap-12 2xl:px-48 ${
+        className={`flex h-full w-full flex-col items-center gap-4 overflow-auto bg-black-80 px-8 py-4 text-start transition-all md:flex-row md:gap-12 md:px-16 md:py-8 2xl:px-48 ${
           isNarrator && "justify-center"
-        }`}
+        } ${!isDisableClicked && "hover:bg-black-75"}`}
       >
         {!isNarrator && (
           <CharacterImage
@@ -34,7 +45,7 @@ export default function TextPanel({
             characterUrl={characterUrl}
           />
         )}
-        <div className="flex basis-4/5 flex-col items-center justify-center gap-4 md:items-start">
+        <div className="flex flex-col items-center justify-center gap-4 md:basis-4/5 md:items-start">
           {!isNarrator && <CharacterName characterName={characterName} />}
           <DialogBox dialog={dialog} isNarrator={isNarrator} />
         </div>

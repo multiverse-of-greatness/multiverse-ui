@@ -127,31 +127,52 @@ type GetStoryChunkByChunkIdResponse = {
 };
 const getStoryChunkByChunkIdQuery =
   "MATCH (chunk:StoryChunk { id: $chunkId })-[choices:BRANCHED_TO]->() RETURN chunk, choices";
+const getLeafStoryChunkByChunkIdQuery =
+  "MATCH (chunk:StoryChunk { id: $chunkId }) RETURN chunk";
 export const getStoryChunkByChunkId = async (chunkId: string) => {
   const session = getSession();
   try {
+    let isLeaf = false;
     const responses = await session.executeRead((txc) =>
       txc.run<GetStoryChunkByChunkIdResponse>(getStoryChunkByChunkIdQuery, {
         chunkId,
       }),
     );
-    const filteredResponses = responses.records.filter(
+    let filteredResponses = responses.records.filter(
       (record) => record !== undefined && Object.keys(record).length !== 0,
     );
+
+    if (filteredResponses.length === 0) {
+      const responses = await session.executeRead((txc) =>
+        txc.run<GetStoryChunkByChunkIdResponse>(
+          getLeafStoryChunkByChunkIdQuery,
+          { chunkId },
+        ),
+      );
+      filteredResponses = responses.records.filter(
+        (record) => record !== undefined && Object.keys(record).length !== 0,
+      );
+      isLeaf = true;
+    }
+
     const chunkResponse = filteredResponses[0].get("chunk").properties;
     const stories = z
       .array(StoryNarrativeJson)
       .parse(JSON.parse(chunkResponse.story))
       .map((narrative) => StoryNarrative.fromJson(narrative));
-    const choicesResponse = filteredResponses
-      .map((record) => record.get("choices").properties)
-      .filter(
-        (choice) => choice !== undefined && Object.keys(choice).length !== 0,
-      )
-      .map((choice) => ({ ...choice, id: choice.id.toNumber() }));
-    const choices = choicesResponse.map((choice) =>
-      StoryChoice.fromJson(choice),
-    );
+
+    let choices: StoryChoice[] = []
+    if (!isLeaf) {
+      const choicesResponse = filteredResponses
+        .map((record) => record.get("choices").properties)
+        .filter(
+          (choice) => choice !== undefined && Object.keys(choice).length !== 0,
+        )
+        .map((choice) => ({ ...choice, id: choice.id.toNumber() }));
+      choices = choicesResponse.map((choice) =>
+        StoryChoice.fromJson(choice),
+      );
+    }
     const storyChunk = new StoryChunk(
       chunkResponse.id,
       chunkResponse.chapter.toNumber(),
@@ -234,6 +255,11 @@ export const getNextStoryChunkIdByChunkId = async (currentChunkId: string) => {
         { currentChunkId },
       ),
     );
+
+    if (response.records.length === 0) {
+      return null;
+    }
+
     const chunkId = response.records[0].get("chunk.id");
     return chunkId;
   } catch (error) {

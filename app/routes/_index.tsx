@@ -12,11 +12,19 @@ export default function Index() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <p className="text-center text-4xl font-bold">Multiverse UI</p>
+
+      <p>Consent + Description</p>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
+        accusamus quidem voluptatum pariatur vero! Reiciendis hic blanditiis
+        inventore voluptas neque eveniet ad est dolores iure error aspernatur,
+        nostrum rem veritatis.
+      </p>
       <Link
-        className="mt-4 rounded-md border-2 border-black px-4 py-2 text-center text-xl transition-all hover:bg-black hover:text-white"
-        to="/game"
+        className="mt-8 border-b-2 border-indigo-500 text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:text-indigo-700"
+        to="/questionnaires/begin"
       >
-        Start
+        Participate
       </Link>
     </div>
   );

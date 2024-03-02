@@ -5,7 +5,12 @@ import {
   getStoryChunkByChunkId,
   getStoryDataById,
 } from ".server/stories.server";
-import { redirect, useLoaderData } from "@remix-run/react";
+import {
+  redirect,
+  useLoaderData,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
 
 import GameScreen from "~/components/GameScreen/GameScreen";
 import { StoryChunk } from ".server/models/StoryChunk";
@@ -23,37 +28,54 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const choiceId = formData.get("choiceId");
 
-  // Chapter end
   if (Number(choiceId ?? "") === -1) {
     const nextChunkId = await getNextStoryChunkIdByChunkId(chunkId ?? "");
+
+    if (nextChunkId === null) {
+      return redirect(`/questionnaires/end`);
+    }
+
     return redirect(`/game/${storyId}/${nextChunkId}`);
   }
-
-  // TODO: Handle game end
 
   const nextChunkId = await getNextStoryChunkIdByChoiceId(
     chunkId ?? "",
     Number(choiceId ?? ""),
   );
+
   return redirect(`/game/${storyId}/${nextChunkId}`);
 };
 
 export default function Game() {
-  const data = useLoaderData<typeof loader>();
-  return !data ? (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <p className="text-center text-xl">Loading...</p>
-    </div>
-  ) : (
+  const submit = useSubmit();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { storyData, storyChunk } = useLoaderData<typeof loader>();
+
+  const onNextDialog = (currentOrder: number) => {
+    const params = new URLSearchParams();
+    params.set("order", (currentOrder + 1).toString());
+    setSearchParams(params);
+  };
+
+  const onChapterEnd = () => {
+    submit({ choiceId: -1 }, { method: "post" });
+  };
+
+  return (
     <>
       <GameScreen
-        storyData={data.storyData as StoryData}
-        storyChunk={data.storyChunk as StoryChunk}
+        storyData={storyData as StoryData}
+        storyChunk={storyChunk as StoryChunk}
+        order={
+          searchParams.get("order") ? Number(searchParams.get("order")) : 0
+        }
+        onChapterEnd={onChapterEnd}
+        onNextDialog={onNextDialog}
       />
       {/* <audio autoPlay={true} loop={true}>
-				<source src='bgm.wav' type='audio/wav' />
-				<track kind="captions" />
-			</audio> */}
+        <source src="/bgm.mp3" type="audio/mp3" />
+        <track kind="captions" />
+      </audio> */}
     </>
   );
 }

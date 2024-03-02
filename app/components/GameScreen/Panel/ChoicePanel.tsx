@@ -1,22 +1,21 @@
 import Choice from "./ChoicePanel/Choice";
+import LoadingSpinner from "~/components/LoadingSpinner";
 import { StoryChoice } from ".server/models/story/StoryChoice";
+import { useNavigation } from "@remix-run/react";
 
 type ChoicePanelProps = {
   choices: StoryChoice[];
 };
 
 export default function ChoicePanel({ choices }: Readonly<ChoicePanelProps>) {
-  //TODO: Automatically select the next chapter if there are no choices
-  let content = (
-    <form method="POST" className="rounded-xl bg-black-80">
-      <Choice id={-1} choice="Next Chapter" description="" />
-    </form>
-  );
-
-  if (choices.length > 0) {
-    content = (
-      <div className="mx-auto flex flex-col justify-between gap-8 rounded-xl bg-black-80 px-16 py-12">
-        <p className="text-center text-3xl font-bold text-white">
+  const navigation = useNavigation();
+  return (
+    <div className="absolute bottom-0 left-0 z-10 flex h-fit w-full pt-4 md:right-0 md:top-0 md:h-3/4 md:items-center md:justify-center">
+      <div className="relative mx-auto flex flex-col justify-between gap-8 rounded-xl bg-black-90 px-8 py-6 md:bg-black-80 md:px-12 md:py-8 lg:px-16 lg:py-12">
+        {navigation.state === "loading" && (
+          <LoadingSpinner size="md" position="absolute" color="white" />
+        )}
+        <p className="text-center text-xl font-bold text-white md:text-3xl">
           What will you do?
         </p>
         <form
@@ -35,12 +34,6 @@ export default function ChoicePanel({ choices }: Readonly<ChoicePanelProps>) {
             ))}
         </form>
       </div>
-    );
-  }
-
-  return (
-    <div className="absolute left-0 top-0 flex h-1/2 w-full items-center justify-center md:h-3/4">
-      {content}
     </div>
   );
 }
