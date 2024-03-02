@@ -1,5 +1,11 @@
-import { type MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  type MetaFunction,
+} from "@remix-run/node";
+import { json, redirect } from "@remix-run/react";
+import { commitSession, getSession } from "~/session";
+import { v4 as uuidv4 } from "uuid";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,6 +13,31 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Infinite Possibilities" },
   ];
 };
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+  if (session.has("userId")) {
+    return redirect("/questionnaires/begin"); //TODO: Redirect to the last visited page
+  }
+
+  return json(null, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+
+  const userId = uuidv4();
+  await session.set("userId", userId);
+  return redirect("/questionnaires/begin", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  }); //TODO: Save to DB
+}
 
 export default function Index() {
   return (
@@ -84,12 +115,11 @@ export default function Index() {
         concerns.
       </p>
       <hr className="my-6 border border-slate-950 border-opacity-50 dark:border-slate-50" />
-      <Link
-        className="w-fit self-center rounded border-4 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50"
-        to="/questionnaires/begin"
-      >
-        <button>Agree and Participate</button>
-      </Link>
+      <form action="?index" method="POST" className="self-center">
+        <button className="rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
+          Agree and Participate
+        </button>
+      </form>
     </div>
   );
 }

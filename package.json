@@ -14,6 +14,7 @@
     "@remix-run/express": "^2.8.0",
     "@remix-run/node": "^2.8.0",
     "@remix-run/react": "^2.8.0",
+    "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.17",
     "compression": "^1.7.4",
     "dotenv": "^16.4.5",
@@ -25,6 +26,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-client-cache": "^1.0.1",
+    "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
