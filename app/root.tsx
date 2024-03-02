@@ -22,7 +22,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-slate-50 dark:bg-slate-950">
         {children}
         <ScrollRestoration />
         <Scripts />
