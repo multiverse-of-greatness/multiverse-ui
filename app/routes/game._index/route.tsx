@@ -2,6 +2,15 @@ import { getFirstStoryChunkId, getStories } from ".server/stories.server";
 
 import { redirect } from "@remix-run/react";
 
+import { type MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Multiverse UI - Loading..." },
+    { name: "description", content: "Infinite Possibilities" },
+  ];
+};
+
 export const loader = async () => {
   const stories = await getStories();
   let randomStoryId = stories[Math.floor(Math.random() * stories.length)];

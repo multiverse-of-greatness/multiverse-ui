@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Index() {
   return (
     <div className="mx-auto my-12 flex flex-col px-16 text-slate-950 lg:w-4/5 lg:px-8 xl:w-2/3 2xl:w-1/2 dark:text-slate-100">
-      <h1 className="mb-8 text-center text-3xl md:text-4xl font-bold">
+      <h1 className="mb-8 text-center text-3xl font-bold md:text-4xl">
         🌌 Multiverse of Greatness 🌠
       </h1>
       <p className="mb-2">
@@ -123,8 +123,9 @@ export default function Index() {
       </p>
       <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
       <p className="px-4 text-center italic md:px-8">
-        You may encounter some loading time when you play the game. Please be
-        patient as all the data are being collected for research purposes.
+        Please complete the game and questionnaires in one sitting. While
+        playing, you may encounter some loading indicator. Please be patient as
+        all the data are being collected for research purposes.
       </p>
       <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
       <form action="?index" method="POST" className="self-center">

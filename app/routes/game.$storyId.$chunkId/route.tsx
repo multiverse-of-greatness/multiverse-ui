@@ -16,6 +16,14 @@ import {
 import GameScreen from "~/components/GameScreen/GameScreen";
 import { StoryChunk } from ".server/models/StoryChunk";
 import { StoryData } from ".server/models/StoryData";
+import { type MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Multiverse UI - Game" },
+    { name: "description", content: "Infinite Possibilities" },
+  ];
+};
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { storyId, chunkId } = params;

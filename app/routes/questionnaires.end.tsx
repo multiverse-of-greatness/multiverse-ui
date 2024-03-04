@@ -1,5 +1,13 @@
 import LoadingSpinner from "~/components/LoadingSpinner";
+import { type MetaFunction } from "@remix-run/node";
 import { useNavigation } from "@remix-run/react";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Multiverse UI - Questionnaire - Begin" },
+    { name: "description", content: "Infinite Possibilities" },
+  ];
+};
 
 export default function EndQuestionnaire() {
   const navigation = useNavigation();
