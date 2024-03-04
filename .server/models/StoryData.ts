@@ -17,6 +17,7 @@ export const StoryDataJson = z.object({
   beginning: z.string(),
   endings: z.array(EndingDataJson),
   generated_by: z.string(),
+  approach: z.string(),
 });
 
 export class StoryData {
@@ -31,6 +32,7 @@ export class StoryData {
   beginning: string;
   endings: EndingData[];
   generatedBy: string;
+  approach: string;
 
   constructor(
     id: string,
@@ -44,6 +46,7 @@ export class StoryData {
     beginning: string,
     endings: EndingData[],
     generatedBy: string,
+    approach: string,
   ) {
     this.id = id;
     this.title = title;
@@ -56,6 +59,7 @@ export class StoryData {
     this.beginning = beginning;
     this.endings = endings;
     this.generatedBy = generatedBy;
+    this.approach = approach;
   }
 
   static fromJson(jsonObj: typeof StoryDataJson): StoryData {
@@ -76,6 +80,7 @@ export class StoryData {
       parsed.beginning,
       parsed.endings.map((ending) => EndingData.fromJson(ending)),
       parsed.generated_by,
+      parsed.approach,
     );
   }
 
@@ -96,10 +101,11 @@ export class StoryData {
       beginning: this.beginning,
       endings: this.endings.map((ending: EndingData) => ending.toJson()),
       generated_by: this.generatedBy,
+      approach: this.approach,
     };
   }
 
   toString(): string {
-    return `StoryData(id=${this.id}, title=${this.title}, genre=${this.genre}, themes=${this.themes}, main_scenes=[${this.mainScenes.map((s) => s.toString()).join(", ")}], main_characters=[${this.mainCharacters.map((c) => c.toString()).join(", ")}], synopsis=${this.synopsis}, chapter_synopses=[${this.chapterSynopses.map((cs) => cs.toString()).join(", ")}], beginning=${this.beginning}, endings=[${this.endings.map((e) => e.toString()).join(", ")}])`;
+    return `StoryData(id=${this.id}, title=${this.title}, genre=${this.genre}, themes=${this.themes}, main_scenes=[${this.mainScenes.map((s) => s.toString()).join(", ")}], main_characters=[${this.mainCharacters.map((c) => c.toString()).join(", ")}], synopsis=${this.synopsis}, chapter_synopses=[${this.chapterSynopses.map((cs) => cs.toString()).join(", ")}], beginning=${this.beginning}, endings=[${this.endings.map((e) => e.toString()).join(", ")}]), approach=${this.approach}`;
   }
 }
