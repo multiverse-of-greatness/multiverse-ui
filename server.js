@@ -1,7 +1,7 @@
-import { createRequestHandler } from "@remix-run/express";
-import { installGlobals } from "@remix-run/node";
 import compression from "compression";
+import { createRequestHandler } from "@remix-run/express";
 import express from "express";
+import { installGlobals } from "@remix-run/node";
 import morgan from "morgan";
 
 installGlobals();
