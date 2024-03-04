@@ -5,6 +5,11 @@
       "description": "Please answer the following questions to help us understand your background. This information will be kept confidential and will not be shared with anyone.",
       "questions": [
         {
+          "question": "Email",
+          "description": "Please provide your email address for contact in case of any issues.",
+          "type": "email"
+        },
+        {
           "question": "Gender: How do you identify yourself?",
           "description": null,
           "type": "choice",
@@ -886,6 +891,29 @@
           "subtype": "7-scale",
           "minValue": "Disagree",
           "maxValue": "Agree"
+        }
+      ]
+    },
+    {
+      "category": "Others",
+      "description": "Please answer the following questions.",
+      "questions": [
+        {
+          "question": "Did you encounter a black screen or unknown characters during gameplay?",
+          "description": null,
+          "type": "choice",
+          "subtype": "binary",
+          "options": ["Yes", "No"]
+        },
+        {
+          "question": "If you encountered any issues during gameplay, please describe them here.",
+          "description": null,
+          "type": "text"
+        },
+        {
+          "question": "Do you have any comments or suggestions about the game?",
+          "description": null,
+          "type": "text"
         }
       ]
     }

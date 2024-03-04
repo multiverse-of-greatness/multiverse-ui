@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Index() {
   return (
     <div className="mx-auto my-12 flex flex-col px-16 text-slate-950 lg:w-4/5 lg:px-8 xl:w-2/3 2xl:w-1/2 dark:text-slate-100">
-      <h1 className="mb-8 text-center text-4xl font-bold">
+      <h1 className="mb-8 text-center text-3xl md:text-4xl font-bold">
         🌌 Multiverse of Greatness 🌠
       </h1>
       <p className="mb-2">
@@ -68,8 +68,15 @@ export default function Index() {
         The information you will share with us if you participate in this study
         will be kept completely confidential to the full extent of the law. All
         information are anonymized and will be used for research purposes only.
-        Therefore, I acknowledge that:
       </p>
+      <p>
+        The email address will be collected solely for the purpose of contacting
+        participants in case of an issue. All email addresses will be retained
+        only until the conclusion of this research project and will then be
+        deleted. The email addresses will not be included in the research
+        report.
+      </p>
+      <p>Therefore, I acknowledge that:</p>
       <ul className="mt-2 flex list-inside list-disc flex-col gap-1">
         <li>
           I have been advised of the potential risks and burdens associated with
@@ -114,7 +121,12 @@ export default function Index() {
         Please contact the researchers if you have any questions, requests, or
         concerns.
       </p>
-      <hr className="my-6 border border-slate-950 border-opacity-50 dark:border-slate-50" />
+      <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
+      <p className="px-4 text-center italic md:px-8">
+        You may encounter some loading time when you play the game. Please be
+        patient as all the data are being collected for research purposes.
+      </p>
+      <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
       <form action="?index" method="POST" className="self-center">
         <button className="rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
           Agree and Participate
