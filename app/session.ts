@@ -1,7 +1,11 @@
 import { createCookie, createFileSessionStorage } from "@remix-run/node";
 
+import { EventType } from "./types/userEvent";
+
 type SessionData = {
   userId: string;
+  storyId: string;
+  status: EventType
 };
 
 const sessionCookie = createCookie("__session", {

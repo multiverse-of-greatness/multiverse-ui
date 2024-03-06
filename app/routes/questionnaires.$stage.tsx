@@ -16,6 +16,8 @@ import SelectQuestion from "~/components/ui/forms/SelectQuestion";
 import languages from "~/data/languages";
 import ChoiceQuestion from "~/components/ui/forms/ChoiceQuestion";
 import LikertQuestion from "~/components/ui/forms/LikertQuestion";
+import { saveEvent, saveQuestionnaire } from "~/db/firebase";
+import { EventType } from "~/types/userEvent";
 
 export const meta: MetaFunction = () => {
   return [
@@ -45,6 +47,44 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({ userId, beginQuestionnaires, languageList });
 }
+
+export const action = async ({ request, params }: LoaderFunctionArgs) => {
+  const { stage } = params;
+  if (!stage || !(stage in questionnaires)) {
+    return redirect("/");
+  }
+
+  const formData = await request.formData();
+  const userId = formData.get("userId")?.toString() ?? "";
+  const data: { [key: string]: string } = {};
+  for (const [key, value] of formData.entries()) {
+    data[key.toString()] = JSON.stringify(value).toString().trim();
+  }
+
+  await saveQuestionnaire(userId, stage as keyof typeof questionnaires, data);
+  if (stage === "begin") {
+    await saveEvent({
+      userId,
+      storyId: "begin",
+      chunkId: "begin",
+      eventType: EventType.COMPLETED_BEGIN_QUESTIONNAIRE,
+      eventTime: new Date(),
+      data: null,
+    });
+
+    return redirect("/game");
+  } else if (stage === "end") {
+    await saveEvent({
+      userId,
+      storyId: "end",
+      chunkId: "end",
+      eventType: EventType.COMPLETED_END_QUESTIONNAIRE,
+      eventTime: new Date(),
+      data: null,
+    });
+    return redirect("/finish");
+  }
+};
 
 export const mapQuestionToComponent = (
   question: Question,
@@ -170,7 +210,7 @@ export default function BeginQuestionnaire() {
           </FormCategory>
         ))}
         <button
-          className={`mt-4 rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all ${navigation.state === "loading" ? "cursor-not-allowed" : "hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50"}`}
+          className={`mt-4 w-full rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all ${navigation.state === "loading" ? "cursor-not-allowed" : "hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50"}`}
           disabled={navigation.state === "loading"}
           type="submit"
         >

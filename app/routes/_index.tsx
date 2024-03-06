@@ -7,6 +7,8 @@ import { Form, json, redirect } from "@remix-run/react";
 import { commitSession, getSession } from "~/session";
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
+import { saveEvent } from "~/db/firebase";
+import { EventType } from "~/types/userEvent";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,11 +35,19 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const userId = uuidv4();
   session.set("userId", userId);
+  await saveEvent({
+    userId,
+    storyId: "begin",
+    chunkId: "begin",
+    eventType: EventType.AGREED_TO_PARTICIPATE,
+    eventTime: new Date(),
+    data: null,
+  });
   return redirect("/questionnaires/begin", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
-  }); //TODO: Save to DB
+  });
 }
 
 export default function Index() {
