@@ -6,6 +6,7 @@ import {
 import { Form, json, redirect } from "@remix-run/react";
 import { commitSession, getSession } from "~/session";
 import { v4 as uuidv4 } from "uuid";
+import { useEffect } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,7 +18,7 @@ export const meta: MetaFunction = () => {
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (session.has("userId")) {
-    return redirect("/questionnaires/begin"); //TODO: Redirect to the last visited page
+    return redirect("/questionnaires/begin");
   }
 
   return json(null, {
@@ -31,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
 
   const userId = uuidv4();
-  await session.set("userId", userId);
+  session.set("userId", userId);
   return redirect("/questionnaires/begin", {
     headers: {
       "Set-Cookie": await commitSession(session),
@@ -40,6 +41,10 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Index() {
+  useEffect(() => {
+    document.body.requestFullscreen();
+  }, []);
+
   return (
     <div className="mx-auto my-12 flex flex-col px-16 text-slate-950 lg:w-4/5 lg:px-8 xl:w-2/3 2xl:w-1/2 dark:text-slate-100">
       <h1 className="mb-8 text-center text-3xl font-bold md:text-4xl">

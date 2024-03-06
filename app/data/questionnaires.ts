@@ -1,4 +1,6 @@
-{
+import { Survey } from "~/types/questionnaire";
+
+export default {
   "begin": [
     {
       "category": "Demographic",
@@ -10,17 +12,24 @@
           "type": "email"
         },
         {
-          "question": "Gender: How do you identify yourself?",
-          "description": null,
+          "question": "Gender",
+          "description": "How do you identify yourself?",
           "type": "choice",
-          "subtype": "single",
-          "options": ["Male", "Female", "Prefer not to say", "Other"]
+          "options": [
+            'Male',
+            'Female',
+            'Non-binary',
+            'Other',
+            'Prefer not to say',
+          ]
         },
         {
           "question": "Age",
           "description": null,
           "type": "number",
-          "subtype": "integer"
+          "subtype": "integer",
+          "minValue": 12,
+          "maxValue": 120
         },
         {
           "question": "Native language",
@@ -32,7 +41,8 @@
           "question": "English proficiency",
           "description": null,
           "type": "choice",
-          "subtype": "single"
+          "subtype": "single",
+          "options": ["Beginner", "Intermediate", "Proficient", "Native"]
         }
       ]
     },
@@ -45,7 +55,7 @@
           "description": "The emotional quality or positivity/negativity of an experience or emotion.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Unhappy",
           "maxValue": "Happy"
         },
@@ -54,7 +64,7 @@
           "description": "The level of physiological and psychological activation or energy associated with an experience or emotion.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Calm",
           "maxValue": "Excited"
         },
@@ -63,7 +73,7 @@
           "description": "The degree of control or influence an emotion has over an individual's thoughts and behaviors.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Controlled",
           "maxValue": "In control"
         }
@@ -346,7 +356,7 @@
           "description": "The emotional quality or positivity/negativity of an experience or emotion.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Unhappy",
           "maxValue": "Happy"
         },
@@ -355,7 +365,7 @@
           "description": "The level of physiological and psychological activation or energy associated with an experience or emotion.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Calm",
           "maxValue": "Excited"
         },
@@ -364,7 +374,7 @@
           "description": "The degree of control or influence an emotion has over an individual's thoughts and behaviors.",
           "image": "",
           "type": "likert",
-          "subtype": "9-scale",
+          "subtype": 9,
           "minValue": "Controlled",
           "maxValue": "In control"
         }
@@ -800,7 +810,7 @@
           "question": "I am often impatient to find out how a story ends.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -808,7 +818,7 @@
           "question": "I am often glued to a story, yearning to see how everything plays out.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -816,7 +826,7 @@
           "question": "Stories arouse my curiosity easily.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -824,7 +834,7 @@
           "question": "It is easy for me to get involved with the feelings of the characters in a story.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -832,7 +842,7 @@
           "question": "I am often affected emotionally by stories.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -840,7 +850,7 @@
           "question": "I often feel happy when a character succeeds, and I feel sad when they suffer in some way.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -848,7 +858,7 @@
           "question": "I often become very involved in a story that I would otherwise consider unrealistic, just for the fun of it.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -856,7 +866,7 @@
           "question": "I can easily immerse myself even in unrealistic stories.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -864,7 +874,7 @@
           "question": "I often find myself accepting events that I might have otherwise considered unrealistic.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -872,7 +882,7 @@
           "question": "The story world is often closer to me than the real world.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -880,7 +890,7 @@
           "question": "I often feel that a story creates a new world, and then that world suddenly disappears when the story ends.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         },
@@ -888,7 +898,7 @@
           "question": "When I read a story, I often feel that my body is in the room, but my mind is inside the world created by the story.",
           "description": null,
           "type": "likert",
-          "subtype": "7-scale",
+          "subtype": 7,
           "minValue": "Disagree",
           "maxValue": "Agree"
         }
@@ -907,15 +917,16 @@
         },
         {
           "question": "If you encountered any issues during gameplay, please describe them here.",
-          "description": null,
+          "description": "Please provide as much detail as possible. In case you don't have any issues, please type 'N/A'.",
           "type": "text"
         },
         {
           "question": "Do you have any comments or suggestions about the game?",
-          "description": null,
+          "description": "Please provide as much detail as possible. In case you don't have any comments or suggestions, please type 'N/A'.",
           "type": "text"
         }
       ]
     }
   ]
-}
+} as Survey
+

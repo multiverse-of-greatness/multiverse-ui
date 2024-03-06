@@ -11,7 +11,7 @@ import {
   getNextStoryChunkIdByChunkId,
   getStoryChunkByChunkId,
   getStoryDataById,
-} from ".server/stories.server";
+} from ".server/stories";
 
 import GameScreen from "~/components/GameScreen/GameScreen";
 import { StoryChunk } from ".server/models/StoryChunk";
