@@ -1,7 +1,7 @@
 import Choice from "./ChoicePanel/Choice";
 import LoadingSpinner from "~/components/LoadingSpinner";
 import { StoryChoice } from ".server/models/story/StoryChoice";
-import { useNavigation } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 
 type ChoicePanelProps = {
   choices: StoryChoice[];
@@ -18,7 +18,7 @@ export default function ChoicePanel({ choices }: Readonly<ChoicePanelProps>) {
         <p className="text-center text-xl font-bold text-white md:text-3xl">
           What will you do?
         </p>
-        <form
+        <Form
           method="POST"
           className="flex flex-col items-center justify-center gap-4"
         >
@@ -32,7 +32,7 @@ export default function ChoicePanel({ choices }: Readonly<ChoicePanelProps>) {
                 description={choice.description}
               />
             ))}
-        </form>
+        </Form>
       </div>
     </div>
   );

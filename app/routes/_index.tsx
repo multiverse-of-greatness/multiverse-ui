@@ -3,7 +3,7 @@ import {
   LoaderFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/react";
+import { Form, json, redirect } from "@remix-run/react";
 import { commitSession, getSession } from "~/session";
 import { v4 as uuidv4 } from "uuid";
 
@@ -128,11 +128,11 @@ export default function Index() {
         all the data are being collected for research purposes.
       </p>
       <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
-      <form action="?index" method="POST" className="self-center">
+      <Form action="?index" method="POST" className="self-center">
         <button className="rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
           Agree and Participate
         </button>
-      </form>
+      </Form>
     </div>
   );
 }
