@@ -9,9 +9,11 @@ import { v4 as uuidv4 } from "uuid";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const COLLECTION_NAME = 'story_branching'
+
 export const saveEvent = async (event: UserEvent) => {
   const randomId = uuidv4()
-  const docRef = doc(db, 'story_branching', event.userId, 'events', randomId)
+  const docRef = doc(db, COLLECTION_NAME, event.userId, 'events', randomId)
   await setDoc(docRef, { id: randomId, ...event })
 }
 
@@ -27,7 +29,7 @@ export type Statistics = {
 };
 
 export const getStatistics: () => Promise<Statistics> = async () => {
-  const docRef = doc(db, 'story_branching', 'statistics')
+  const docRef = doc(db, COLLECTION_NAME, 'statistics')
   const result = await getDoc(docRef)
 
   if (result.exists()) {
@@ -63,7 +65,7 @@ export const getStatistics: () => Promise<Statistics> = async () => {
 }
 
 export const updateStatistics = async (storyId: string, approach: "baseline" | "proposed") => {
-  const docRef = doc(db, 'story_branching', 'statistics')
+  const docRef = doc(db, COLLECTION_NAME, 'statistics')
   const result = await getDoc(docRef)
 
   if (result.exists()) {
@@ -101,7 +103,7 @@ export const saveQuestionnaire = async (userId: string, stage: keyof Survey, que
     throw new Error('userId is required')
   }
 
-  const docRef = doc(db, 'story_branching', userId, 'questionnaires', stage)
+  const docRef = doc(db, COLLECTION_NAME, userId, 'questionnaires', stage)
 
   await setDoc(docRef, questionnaire)
 }
