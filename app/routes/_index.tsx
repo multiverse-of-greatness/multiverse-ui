@@ -6,7 +6,6 @@ import {
 import { Form, json, redirect } from "@remix-run/react";
 import { commitSession, getSession } from "~/session";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect } from "react";
 import { saveEvent } from "~/db/firebase";
 import { EventType } from "~/types/userEvent";
 import { redirectBasedOnStatus } from "~/utils/redirect";
@@ -62,10 +61,6 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Index() {
-  useEffect(() => {
-    document.body.requestFullscreen();
-  }, []);
-
   return (
     <div className="mx-auto my-12 flex flex-col px-16 text-slate-950 lg:w-4/5 lg:px-8 xl:w-2/3 2xl:w-1/2 dark:text-slate-100">
       <h1 className="mb-8 text-center text-3xl font-bold md:text-4xl">

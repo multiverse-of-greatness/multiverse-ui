@@ -3,10 +3,11 @@ import { getFirstStoryChunkId, getStories } from ".server/stories";
 import { redirect } from "@remix-run/react";
 
 import { LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
-import { saveEvent } from "~/db/firebase";
+import { getStatistics, saveEvent, updateStatistics } from "~/db/firebase";
 import { commitSession, getSession } from "~/session";
 import { EventType } from "~/types/userEvent";
 import { redirectBasedOnStatus } from "~/utils/redirect";
+import { selectRandomStoryId } from "~/utils/storySelection";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,17 +35,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const stories = await getStories();
-  let randomStoryId = stories[Math.floor(Math.random() * stories.length)];
-  // TODO: Replace with participants balancing logic
-  const allow_ids = [
-    "7f75556e-db71-11ee-a160-9a01b5b45ca5",
-    "da01e3ac-db81-11ee-a67e-9a01b5b45ca5",
-  ];
-  while (!allow_ids.includes(randomStoryId)) {
-    randomStoryId = stories[Math.floor(Math.random() * stories.length)];
-  }
-  // END Replace
-  // TODO: Update stat for balancing algorithm
+  const statistics = await getStatistics();
+  const baselineStories = stories.filter(
+    (story) => story.approach === "baseline",
+  );
+  const proposedStories = stories.filter(
+    (story) => story.approach === "proposed",
+  );
+
+  const { randomStoryId, selectedApproach } = selectRandomStoryId(
+    baselineStories,
+    proposedStories,
+    statistics,
+  );
 
   const firstChunkId = await getFirstStoryChunkId(randomStoryId);
   session.set("storyId", randomStoryId);
@@ -59,6 +62,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     data: null,
   });
   session.set("status", EventType.GAME_STARTED);
+
+  await updateStatistics(randomStoryId, selectedApproach);
 
   return redirect(`/game/${randomStoryId}/${firstChunkId}`, {
     headers: {

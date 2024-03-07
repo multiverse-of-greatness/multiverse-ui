@@ -19,16 +19,20 @@ import { z } from "zod";
 
 type GetStoriesResponse = {
   "s.id": string;
+  "s.approach": string;
 };
 
-const getStoriesQuery = "MATCH (s:StoryData) RETURN s.id";
+const getStoriesQuery = "MATCH (s:StoryData) RETURN s.id, s.approach";
 export const getStories = async () => {
   const session = getSession();
   try {
     const response = await session.executeRead((txc) =>
       txc.run<GetStoriesResponse>(getStoriesQuery),
     );
-    const storyIds = response.records.map((record) => record.get("s.id"));
+    const storyIds = response.records.map((record) => ({
+      id: record.get("s.id"),
+      approach: record.get("s.approach"),
+    }));
     return storyIds;
   } catch (error) {
     console.error(error);
@@ -52,6 +56,7 @@ type GetStoryDataResponse = {
       beginning: string;
       endings: string;
       generatedBy: string;
+      approach: string;
     };
   };
 };
@@ -94,6 +99,7 @@ export const getStoryDataById = async (storyId: string) => {
       response.beginning,
       endings,
       response.generatedBy,
+      response.approach,
     );
 
     return storyData;

@@ -31,9 +31,10 @@ export default function GameScreen({
   const characterName = character
     ? `${character.firstName} ${character.lastName}`
     : "Unknown";
-  const characterUrl = character
-    ? `data:image/png;base64,${character.image}`
-    : "/default-character.png";
+  const characterUrl =
+    character && character.image
+      ? `data:image/png;base64,${character.image}`
+      : "/default-character.png";
   const scene = storyData.mainScenes.find((scene) => scene.id === sceneId);
   const sceneBackgroundUrl = scene
     ? `data:image/png;base64,${scene.image}`
@@ -54,7 +55,7 @@ export default function GameScreen({
   return (
     <div className="relative h-screen w-screen">
       <img
-        className="brightness-80 relative h-full w-full border-none bg-slate object-cover"
+        className="brightness-80 bg-slate relative h-full w-full border-none object-cover"
         src={sceneBackgroundUrl}
         alt={scene?.title ?? "No image available."}
       />
