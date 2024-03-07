@@ -38,7 +38,6 @@ export default function LoadingSpinner({
   return (
     <svg
       aria-hidden="true"
-      role="status"
       className={`animate-spin ${actualPosition} ${spinnerSize} ${spinnerColor}`}
       viewBox="0 0 100 101"
       fill="none"

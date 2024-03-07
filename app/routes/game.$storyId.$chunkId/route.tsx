@@ -11,11 +11,11 @@ import {
   getNextStoryChunkIdByChunkId,
   getStoryChunkByChunkId,
   getStoryDataById,
-} from ".server/stories";
+} from "~/db/stories";
 
 import GameScreen from "~/components/GameScreen/GameScreen";
-import { StoryChunk } from ".server/models/StoryChunk";
-import { StoryData } from ".server/models/StoryData";
+import { StoryChunk } from "~/models/StoryChunk";
+import { StoryData } from "~/models/StoryData";
 import { type MetaFunction } from "@remix-run/node";
 import { saveEvent } from "~/db/firebase";
 import { commitSession, getSession } from "~/session";

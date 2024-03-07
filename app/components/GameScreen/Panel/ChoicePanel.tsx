@@ -1,6 +1,6 @@
 import Choice from "./ChoicePanel/Choice";
 import LoadingSpinner from "~/components/LoadingSpinner";
-import { StoryChoice } from ".server/models/story/StoryChoice";
+import { StoryChoice } from "~/models/story/StoryChoice";
 import { useNavigation } from "@remix-run/react";
 
 type ChoicePanelProps = {

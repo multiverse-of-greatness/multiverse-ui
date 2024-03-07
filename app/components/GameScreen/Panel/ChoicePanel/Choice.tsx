@@ -15,7 +15,7 @@ export default function Choice({
       name="choiceId"
       value={id}
     >
-      <p className="text-xl md:text-2xl font-bold mb-2 md:mb-0">{choice}</p>
+      <p className="mb-2 text-xl font-bold md:mb-0 md:text-2xl">{choice}</p>
       {description && <p className="text-md text-white">{description}</p>}
     </button>
   );

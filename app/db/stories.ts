@@ -1,20 +1,20 @@
 import {
   ChapterSynopsis,
   ChapterSynopsisJson,
-} from "./models/story/ChapterSynopsis";
-import { CharacterData, CharacterDataJson } from "./models/story/CharacterData";
-import { EndingData, EndingDataJson } from "./models/story/EndingData";
-import { SceneData, SceneDataJson } from "./models/story/SceneData";
-import { StoryChoice, StoryChoiceJson } from "./models/story/StoryChoice";
+} from "~/models/story/ChapterSynopsis";
+import { CharacterData, CharacterDataJson } from "~/models/story/CharacterData";
+import { EndingData, EndingDataJson } from "~/models/story/EndingData";
+import { SceneData, SceneDataJson } from "~/models/story/SceneData";
 import {
   StoryNarrative,
   StoryNarrativeJson,
-} from "./models/story/StoryNarrative";
+} from "~/models/story/StoryNarrative";
 
 import { Integer } from "neo4j-driver";
-import { StoryChunk } from "./models/StoryChunk";
-import { StoryData } from "./models/StoryData";
-import { getSession } from "./db/neo4j";
+import { StoryChoice } from "~/models/story/StoryChoice";
+import { StoryChunk } from "~/models/StoryChunk";
+import { StoryData } from "~/models/StoryData";
+import { getSession } from "~/db/neo4j";
 import { z } from "zod";
 
 type GetStoriesResponse = {

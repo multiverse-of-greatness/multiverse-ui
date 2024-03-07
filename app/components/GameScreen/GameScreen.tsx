@@ -1,6 +1,6 @@
 import ChoicePanel from "./Panel/ChoicePanel";
-import { StoryChunk } from ".server/models/StoryChunk";
-import { StoryData } from ".server/models/StoryData";
+import { StoryChunk } from "~/models/StoryChunk";
+import { StoryData } from "~/models/StoryData";
 import TextPanel from "./Panel/TextPanel";
 import { useNavigation } from "@remix-run/react";
 import { useState } from "react";

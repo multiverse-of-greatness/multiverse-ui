@@ -1,4 +1,4 @@
-import { getFirstStoryChunkId, getStories } from ".server/stories";
+import { getFirstStoryChunkId, getStories } from "~/db/stories";
 
 import { redirect } from "@remix-run/react";
 
