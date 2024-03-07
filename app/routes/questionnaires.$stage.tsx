@@ -9,7 +9,7 @@ import {
 
 import LoadingSpinner from "~/components/LoadingSpinner";
 import { Question } from "~/types/questionnaire";
-import { getSession } from "~/session";
+import { commitSession, getSession } from "~/session";
 import TextQuestion from "~/components/ui/forms/TextQuestion";
 import FormCategory from "~/components/ui/forms/FormCategory";
 import SelectQuestion from "~/components/ui/forms/SelectQuestion";
@@ -18,6 +18,7 @@ import ChoiceQuestion from "~/components/ui/forms/ChoiceQuestion";
 import LikertQuestion from "~/components/ui/forms/LikertQuestion";
 import { saveEvent, saveQuestionnaire } from "~/db/firebase";
 import { EventType } from "~/types/userEvent";
+import { redirectBasedOnStatus } from "~/utils/redirect";
 
 export const meta: MetaFunction = () => {
   return [
@@ -28,13 +29,19 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { stage } = params;
-  const session = await getSession(request.headers.get("Cookie"));
-  const userId = session.get("userId");
-  if (!userId) {
+  if (!stage || !(stage in questionnaires)) {
     return redirect("/");
   }
 
-  if (!stage || !(stage in questionnaires)) {
+  const session = await getSession(request.headers.get("Cookie"));
+  const userId = session.get("userId");
+  if (session.has("userId") && session.has("status")) {
+    const status = session.get("status")!;
+    const pathToRedirect = redirectBasedOnStatus(status);
+    if (pathToRedirect && pathToRedirect !== `/questionnaires/${stage}`) {
+      return redirect(pathToRedirect);
+    }
+  } else if (!userId) {
     return redirect("/");
   }
 
@@ -49,6 +56,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request, params }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get("Cookie"));
   const { stage } = params;
   if (!stage || !(stage in questionnaires)) {
     return redirect("/");
@@ -71,8 +79,13 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       eventTime: new Date(),
       data: null,
     });
+    session.set("status", EventType.COMPLETED_BEGIN_QUESTIONNAIRE);
 
-    return redirect("/game");
+    return redirect("/game", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   } else if (stage === "end") {
     await saveEvent({
       userId,
@@ -82,7 +95,13 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
       eventTime: new Date(),
       data: null,
     });
-    return redirect("/finish");
+    session.set("status", EventType.COMPLETED_END_QUESTIONNAIRE);
+
+    return redirect("/finish", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   }
 };
 

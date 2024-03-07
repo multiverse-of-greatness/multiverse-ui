@@ -5,7 +5,8 @@ import { EventType } from "./types/userEvent";
 type SessionData = {
   userId: string;
   storyId: string;
-  status: EventType
+  chunkId: string;
+  status: EventType;
 };
 
 const sessionCookie = createCookie("__session", {

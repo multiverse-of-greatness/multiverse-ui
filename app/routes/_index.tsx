@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 import { saveEvent } from "~/db/firebase";
 import { EventType } from "~/types/userEvent";
+import { redirectBasedOnStatus } from "~/utils/redirect";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,8 +20,17 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
-  if (session.has("userId")) {
-    return redirect("/questionnaires/begin");
+  if (session.has("userId") && session.has("status")) {
+    const status = session.get("status")!;
+    const pathToRedirect = redirectBasedOnStatus(status);
+    if (pathToRedirect) {
+      return redirect(pathToRedirect);
+    }
+  } else if (session.has("storyId") && session.has("chunkId")) {
+    const storyId = session.get("storyId")!;
+    const chunkId = session.get("chunkId")!;
+
+    return redirect(`/game/${storyId}/${chunkId}`);
   }
 
   return json(null, {
@@ -43,6 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
     eventTime: new Date(),
     data: null,
   });
+  session.set("status", EventType.AGREED_TO_PARTICIPATE);
   return redirect("/questionnaires/begin", {
     headers: {
       "Set-Cookie": await commitSession(session),
