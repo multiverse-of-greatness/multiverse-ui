@@ -29,13 +29,16 @@ export default function SelectQuestion({
       )}
       <div className="flex w-full items-center">
         <select
-          className="mt-2 w-full rounded border border-zinc-300 p-2 px-2 dark:border-none hover:bg-zinc-600 dark:bg-zinc-700"
+          className="mt-2 w-full rounded border border-zinc-300 p-2 px-2 hover:bg-zinc-600 dark:border-none dark:bg-zinc-700"
           id={id}
           name={id}
           required={required}
         >
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+            >
               {option.label}
             </option>
           ))}
