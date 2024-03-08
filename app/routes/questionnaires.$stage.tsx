@@ -19,6 +19,7 @@ import LikertQuestion from "~/components/ui/forms/LikertQuestion";
 import { saveEvent, saveQuestionnaire } from "~/db/firebase";
 import { EventType } from "~/types/userEvent";
 import { redirectBasedOnStatus } from "~/utils/redirect";
+import { generateSchema } from "~/utils/formValidation";
 
 export const meta: MetaFunction = () => {
   return [
@@ -64,12 +65,25 @@ export const action = async ({ request, params }: LoaderFunctionArgs) => {
 
   const formData = await request.formData();
   const userId = formData.get("userId")?.toString() ?? "";
-  const data: { [key: string]: string } = {};
-  for (const [key, value] of formData.entries()) {
-    data[key.toString()] = JSON.stringify(value).toString().trim();
+  const data: { [key: string]: string | number } = {};
+  for (const key of formData.keys()) {
+    data[key.toString()] = formData.get(key)?.toString().trim() ?? "";
+    if (!isNaN(Number(data[key.toString()]))) {
+      data[key.toString()] = Number(data[key.toString()]);
+    }
   }
+  const schema = generateSchema(
+    questionnaires[stage as keyof typeof questionnaires],
+    languages.map((language) => language.code),
+  );
+  const parsedData = schema.parse(data);
 
-  await saveQuestionnaire(userId, stage as keyof typeof questionnaires, data);
+  await saveQuestionnaire(
+    userId,
+    stage as keyof typeof questionnaires,
+    parsedData,
+  );
+
   if (stage === "begin") {
     await saveEvent({
       userId,
