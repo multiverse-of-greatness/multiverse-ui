@@ -43,6 +43,13 @@ export default {
           "type": "choice",
           "subtype": "single",
           "options": ["Beginner", "Intermediate", "Proficient", "Native"]
+        },
+        {
+          "question": "How familiar are you with visual novel games?",
+          "description": null,
+          "type": "choice",
+          "subtype": "single",
+          "options": ["Not at all", "Somewhat familiar", "Familiar", "Very familiar", "Extremely familiar"]
         }
       ]
     },
