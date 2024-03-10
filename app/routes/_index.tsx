@@ -149,11 +149,20 @@ export default function Index() {
         concerns.
       </p>
       <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
-      <p className="px-4 text-center italic md:px-8">
-        Please complete the game and questionnaires in one sitting. While
-        playing, you may encounter some loading indicator. Please be patient as
-        all the data are being collected for research purposes.
-      </p>
+      <ul className="my-2 flex list-inside list-disc flex-col gap-1 italic">
+        <li>
+          Please complete the game and questionnaires in one sitting until
+          encountering the end screen with thank you message.
+        </li>
+        <li>
+          We recommend using a desktop or laptop for the best experience. Please
+          refrain from using a mobile device.
+        </li>
+        <li>
+          While playing, you may encounter some loading indicator. Please be
+          patient as all the data are being collected for research purposes.
+        </li>
+      </ul>
       <hr className="my-6 border border-slate-950 border-opacity-30 dark:border-slate-50" />
       <Form action="?index" method="POST" className="self-center">
         <button className="rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
