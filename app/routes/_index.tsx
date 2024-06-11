@@ -32,13 +32,13 @@ export default function Index() {
           <Form action="?index" method="POST" className="self-center">
             <input type="hidden" name="approach" value="baseline" />
             <button className="rounded border-2 border-indigo-500 px-4 py-2 text-center text-2xl font-bold text-indigo-500 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
-              Play Best Baseline Story
+              Best Baseline Story
             </button>
           </Form>
           <Form action="?index" method="POST" className="self-center">
             <input type="hidden" name="approach" value="proposed" />
             <button className="rounded border-2 bg-indigo-600 px-4 py-2 text-center text-2xl font-bold text-zinc-100 transition-all hover:border-indigo-700 hover:bg-indigo-700 hover:text-slate-50">
-              Play Best Proposed Story
+              Best Proposed Story
             </button>
           </Form>
         </div>
