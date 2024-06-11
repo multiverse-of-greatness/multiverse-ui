@@ -148,7 +148,11 @@ export const getStoryChunkByChunkId = async (chunkId: string) => {
       (record) => record !== undefined && Object.keys(record).length !== 0,
     );
 
-    if (filteredResponses.length === 0) {
+    const choicesResponse = filteredResponses
+      .map((record) => record.get("choices").properties)
+    const isEmptyChoice = choicesResponse.length === 0 || (choicesResponse.length === 1 && choicesResponse[0] === undefined) || (choicesResponse.length === 1 && Object.keys(JSON.parse(choicesResponse[0].choice)).length === 0)
+
+    if (filteredResponses.length === 0 || isEmptyChoice) {
       const responses = await session.executeRead((txc) =>
         txc.run<GetStoryChunkByChunkIdResponse>(
           getLeafStoryChunkByChunkIdQuery,
@@ -167,6 +171,8 @@ export const getStoryChunkByChunkId = async (chunkId: string) => {
       .parse(JSON.parse(chunkResponse.story))
       .map((narrative) => StoryNarrative.fromJson(narrative));
 
+    // TODO: Handle cases when choices is empty object
+
     let choices: StoryChoice[] = []
     if (!isLeaf) {
       const choicesResponse = filteredResponses
@@ -174,7 +180,8 @@ export const getStoryChunkByChunkId = async (chunkId: string) => {
         .filter(
           (choice) => choice !== undefined && Object.keys(choice).length !== 0,
         )
-        .map((choice) => ({ ...choice, id: choice.id.toNumber() }));
+        .map((choice) => JSON.parse(choice.choice))
+
       choices = choicesResponse.map((choice) =>
         StoryChoice.fromJson(choice),
       );
@@ -223,12 +230,12 @@ export const getFirstStoryChunkId = async (storyId: string) => {
 type getNextStoryChunkIdByChoiceIdResponse = {
   "chunk.id": string;
 };
-const getNextStoryChunkIdByChoiceIdQuery =
-  "MATCH (:StoryChunk { id: $currentChunkId })-[:BRANCHED_TO { id: $choiceId }]->(chunk:StoryChunk) RETURN chunk.id LIMIT 1";
 export const getNextStoryChunkIdByChoiceId = async (
   currentChunkId: string,
   choiceId: number,
 ) => {
+  const getNextStoryChunkIdByChoiceIdQuery = `MATCH (:StoryChunk { id: $currentChunkId })-[b:BRANCHED_TO]->(chunk:StoryChunk) WHERE b.choice CONTAINS '"id":${choiceId}' RETURN chunk.id LIMIT 1`;
+
   const session = getSession();
   try {
     const response = await session.executeRead((txc) =>
