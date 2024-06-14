@@ -3,26 +3,26 @@ import { z } from "zod";
 export const StoryNarrativeJson = z.object({
   id: z.number(),
   speaker: z.string(),
-  speaker_id: z.number(),
+  speaker_id: z.union([z.string(), z.number(), z.null()]),
   scene_title: z.string(),
-  scene_id: z.number(),
+  scene_id: z.union([z.string(), z.number(), z.null()]),
   text: z.string(),
 });
 
 export class StoryNarrative {
   id: number;
   speaker: string;
-  speakerId: number;
+  speakerId: string | number | null;
   sceneTitle: string;
-  sceneId: number;
+  sceneId: string | number | null;
   text: string;
 
   constructor(
     id: number,
     speaker: string,
-    speakerId: number,
+    speakerId: string | number | null,
     sceneTitle: string,
-    sceneId: number,
+    sceneId: string | number | null,
     text: string,
   ) {
     this.id = id;

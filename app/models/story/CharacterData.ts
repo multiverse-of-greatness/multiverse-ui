@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CharacterDataJson = z.object({
-  id: z.number(),
+  id: z.union([z.string(), z.number()]),
   first_name: z.string(),
   last_name: z.string(),
   species: z.string(),
@@ -16,7 +16,7 @@ export const CharacterDataJson = z.object({
 });
 
 export class CharacterData {
-  id: number;
+  id: string | number;
   firstName: string;
   lastName: string;
   species: string;
@@ -30,7 +30,7 @@ export class CharacterData {
   originalImage: string | null;
 
   constructor(
-    id: number,
+    id: string | number,
     firstName: string,
     lastName: string,
     species: string,

@@ -3,21 +3,21 @@ import { z } from "zod";
 export const ChapterSynopsisJson = z.object({
   chapter: z.number(),
   synopsis: z.string(),
-  character_ids: z.array(z.number()),
-  scene_ids: z.array(z.number()),
+  character_ids: z.array(z.union([z.string(), z.number()])),
+  scene_ids: z.array(z.union([z.string(), z.number()])),
 });
 
 export class ChapterSynopsis {
   chapter: number;
   synopsis: string;
-  characterIds: number[];
-  sceneIds: number[];
+  characterIds: (string | number)[];
+  sceneIds: (string | number)[];
 
   constructor(
     chapter: number,
     synopsis: string,
-    characterIds: number[],
-    sceneIds: number[],
+    characterIds: (string | number)[],
+    sceneIds: (string | number)[],
   ) {
     this.chapter = chapter;
     this.synopsis = synopsis;

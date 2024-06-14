@@ -6,7 +6,7 @@ import { SceneData, SceneDataJson } from "./story/SceneData";
 import { z } from "zod";
 
 export const StoryDataJson = z.object({
-  id: z.string(),
+  id: z.union([z.string(), z.number()]),
   title: z.string(),
   genre: z.string(),
   themes: z.array(z.string()),
@@ -21,7 +21,7 @@ export const StoryDataJson = z.object({
 });
 
 export class StoryData {
-  id: string;
+  id: string | number;
   title: string;
   genre: string;
   themes: string[];
@@ -35,7 +35,7 @@ export class StoryData {
   approach: string;
 
   constructor(
-    id: string,
+    id: string | number,
     title: string,
     genre: string,
     themes: string[],

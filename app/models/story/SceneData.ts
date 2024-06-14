@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const SceneDataJson = z.object({
-  id: z.number(),
+  id: z.union([z.string(), z.number()]),
   title: z.string(),
   location: z.string(),
   description: z.string(),
@@ -9,14 +9,14 @@ export const SceneDataJson = z.object({
 });
 
 export class SceneData {
-  id: number;
+  id: string | number;
   title: string;
   location: string;
   description: string;
   image: string | null;
 
   constructor(
-    id: number,
+    id: string | number,
     title: string,
     location: string,
     description: string,

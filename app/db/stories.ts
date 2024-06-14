@@ -45,7 +45,7 @@ export const getStories = async () => {
 type GetStoryDataResponse = {
   s: {
     properties: {
-      id: string;
+      id: string | number;
       title: string;
       genre: string;
       themes: string[];

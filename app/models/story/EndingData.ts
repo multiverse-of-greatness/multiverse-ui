@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 export const EndingDataJson = z.object({
-  id: z.number(),
+  id: z.union([z.string(), z.number()]),
   ending: z.string(),
 });
 
 export class EndingData {
-  id: number;
+  id: string | number;
   ending: string;
 
-  constructor(id: number, ending: string) {
+  constructor(id: string | number, ending: string) {
     this.id = id;
     this.ending = ending;
   }
