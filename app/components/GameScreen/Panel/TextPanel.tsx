@@ -49,6 +49,12 @@ export default function TextPanel({
           {!isNarrator && <CharacterName characterName={characterName} />}
           <DialogBox dialog={dialog} isNarrator={isNarrator} />
         </div>
+        {!haveChoicesShown && (
+          <div className="absolute bottom-6 right-6 flex items-center rounded-full border border-slate-400 px-4 py-1 text-lg text-zinc-300 shadow transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:border-2 group-hover:bg-zinc-950 lg:text-2xl">
+            <p>Next</p>
+            <p className="arrow-right" />
+          </div>
+        )}
       </div>
     </button>
   );
