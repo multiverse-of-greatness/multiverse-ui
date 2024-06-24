@@ -14,9 +14,8 @@ import {
 } from "~/db/stories";
 
 import GameScreen from "~/components/GameScreen/GameScreen";
-import { StoryChunk } from "~/models/StoryChunk";
-import { StoryData } from "~/models/StoryData";
 import { type MetaFunction } from "@remix-run/node";
+import { StoryChoice } from "~/models/story/StoryChoice";
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,13 +24,45 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const { storyId, chunkId } = params;
+
+  const order = Number(new URL(request.url).searchParams.get("order") ?? 0);
 
   const storyData = await getStoryDataById(storyId ?? "");
   const storyChunk = await getStoryChunkByChunkId(chunkId ?? "");
 
-  return json({ storyData, storyChunk });
+  const narratives = storyChunk.story.toSorted((a, b) => a.id - b.id);
+  const { speakerId, speaker, sceneId, text } = narratives[order];
+  const { choices } = storyChunk;
+
+  const character = storyData.mainCharacters.find(
+    (character) => character.id === speakerId,
+  );
+  const characterName = character
+    ? // eslint-disable-next-line no-irregular-whitespace
+      `${character.firstName} ${character.lastName}`
+    : speaker || "不明";
+  const characterUrl = character?.image
+    ? `data:image/png;base64,${character.image}`
+    : "/default-character.png";
+  const scene = storyData.mainScenes.find((scene) => scene.id === sceneId);
+  const sceneUrl = scene
+    ? `data:image/png;base64,${scene.image}`
+    : "/default-scene.png";
+  const isLastNarrative = order >= narratives.length - 1;
+  const isNarrator = speakerId === -1;
+
+  return json({
+    dialog: text,
+    choices,
+    characterName,
+    characterUrl,
+    sceneTitle: scene?.title,
+    sceneUrl,
+    isLastNarrative,
+    isNarrator,
+  });
 };
 
 export const clientLoader = (args: ClientLoaderFunctionArgs) =>
@@ -65,7 +96,16 @@ clientLoader.hydrate = true;
 export default function Game() {
   const submit = useSubmit();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { storyData, storyChunk } = useCachedLoaderData<typeof loader>();
+  const {
+    dialog,
+    choices,
+    characterName,
+    characterUrl,
+    sceneTitle,
+    sceneUrl,
+    isLastNarrative,
+    isNarrator,
+  } = useCachedLoaderData<typeof loader>();
 
   const onNextDialog = async (currentOrder: number) => {
     const params = new URLSearchParams();
@@ -79,8 +119,14 @@ export default function Game() {
 
   return (
     <GameScreen
-      storyData={storyData as StoryData}
-      storyChunk={storyChunk as StoryChunk}
+      dialog={dialog}
+      isNarrator={isNarrator}
+      isLastNarrative={isLastNarrative}
+      characterName={characterName}
+      characterUrl={characterUrl}
+      sceneTitle={sceneTitle}
+      sceneUrl={sceneUrl}
+      choices={choices.map((choice) => StoryChoice.fromJson(choice))}
       order={searchParams.get("order") ? Number(searchParams.get("order")) : 0}
       onChapterEnd={onChapterEnd}
       onNextDialog={onNextDialog}
