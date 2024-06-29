@@ -1,114 +1,45 @@
 import {
-  ChapterSynopsis,
-  ChapterSynopsisJson,
-} from "~/models/story/ChapterSynopsis";
-import { CharacterData, CharacterDataJson } from "~/models/story/CharacterData";
-import { EndingData, EndingDataJson } from "~/models/story/EndingData";
-import { SceneData, SceneDataJson } from "~/models/story/SceneData";
-import {
   StoryNarrative,
   StoryNarrativeJson,
 } from "~/models/story/StoryNarrative";
 
+import {
+  ChapterSynopsis,
+} from "~/models/story/ChapterSynopsis";
+import { CharacterData } from "~/models/story/CharacterData";
+import { EndingData } from "~/models/story/EndingData";
 import { Integer } from "neo4j-driver";
+import { SceneData } from "~/models/story/SceneData";
 import { StoryChoice } from "~/models/story/StoryChoice";
 import { StoryChunk } from "~/models/StoryChunk";
 import { StoryData } from "~/models/StoryData";
+import allStoryData from '~/data/storyData'
 import { getSession } from "~/db/neo4j";
 import { z } from "zod";
 
-type GetStoriesResponse = {
-  "s.id": string;
-  "s.approach": string;
-};
+export const getStoryDataById = (storyId: string) => {
+  const storyData = allStoryData.find((story) => story.id === storyId);
 
-const getStoriesQuery = "MATCH (s:StoryData) RETURN s.id, s.approach";
-export const getStories = async () => {
-  const session = getSession();
-  try {
-    const response = await session.executeRead((txc) =>
-      txc.run<GetStoriesResponse>(getStoriesQuery),
-    );
-    const storyIds = response.records.map((record) => ({
-      id: record.get("s.id"),
-      approach: record.get("s.approach"),
-    }));
-    return storyIds;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  } finally {
-    session.close();
+  if (!storyData) {
+    throw new Error(`Story with id ${storyId} not found`);
   }
-};
 
-type GetStoryDataResponse = {
-  s: {
-    properties: {
-      id: string | number;
-      title: string;
-      genre: string;
-      themes: string[];
-      main_scenes: string;
-      main_characters: string;
-      synopsis: string;
-      chapter_synopses: string;
-      beginning: string;
-      endings: string;
-      generatedBy: string;
-      approach: string;
-    };
-  };
-};
+  const parsedStoryData = new StoryData(
+    storyData.id,
+    storyData.title,
+    storyData.genre,
+    storyData.themes,
+    storyData.main_scenes.map((scene) => SceneData.fromJson(scene)),
+    storyData.main_characters.map((character) => CharacterData.fromJson(character)),
+    storyData.synopsis,
+    storyData.chapter_synopses.map((chapter) => ChapterSynopsis.fromJson(chapter)),
+    storyData.beginning,
+    storyData.endings.map((ending) => EndingData.fromJson(ending)),
+    storyData.generated_by,
+    storyData.approach,
+  );
 
-const getStoryDataByIdQuery =
-  "MATCH (s:StoryData { id: $storyId }) RETURN s LIMIT 1";
-export const getStoryDataById = async (storyId: string) => {
-  const session = getSession();
-  try {
-    const responses = await session.executeRead((txc) =>
-      txc.run<GetStoryDataResponse>(getStoryDataByIdQuery, { storyId }),
-    );
-    const response = responses.records[0].get("s").properties;
-
-    const mainScenes = z
-      .array(SceneDataJson)
-      .parse(JSON.parse(response.main_scenes))
-      .map((scene) => SceneData.fromJson(scene));
-    const mainCharacters = z
-      .array(CharacterDataJson)
-      .parse(JSON.parse(response.main_characters))
-      .map((character) => CharacterData.fromJson(character));
-    const chapterSynopses = z
-      .array(ChapterSynopsisJson)
-      .parse(JSON.parse(response.chapter_synopses))
-      .map((chapterSynopsis) => ChapterSynopsis.fromJson(chapterSynopsis));
-    const endings = z
-      .array(EndingDataJson)
-      .parse(JSON.parse(response.endings))
-      .map((ending) => EndingData.fromJson(ending));
-    const storyData = new StoryData(
-      response.id,
-      response.title,
-      response.genre,
-      response.themes,
-      mainScenes,
-      mainCharacters,
-      response.synopsis,
-      chapterSynopses,
-      response.beginning,
-      endings,
-      response.generatedBy,
-      response.approach,
-    );
-
-    return storyData;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  } finally {
-    session.close();
-  }
+  return parsedStoryData
 };
 
 type GetStoryChunkByChunkIdResponse = {

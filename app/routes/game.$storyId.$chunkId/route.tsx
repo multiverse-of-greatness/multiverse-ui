@@ -42,13 +42,13 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const characterName = character
     ? // eslint-disable-next-line no-irregular-whitespace
       `${character.firstName} ${character.lastName}`
-    : speaker || "不明";
+    : speaker || "Unknown";
   const characterUrl = character?.image
-    ? `data:image/png;base64,${character.image}`
+    ? `${character.image}`
     : "/default-character.png";
   const scene = storyData.mainScenes.find((scene) => scene.id === sceneId);
   const sceneUrl = scene
-    ? `data:image/png;base64,${scene.image}`
+    ? `${scene.image}`
     : "/default-scene.png";
   const isLastNarrative = order >= narratives.length - 1;
   const isNarrator = speakerId === -1;
