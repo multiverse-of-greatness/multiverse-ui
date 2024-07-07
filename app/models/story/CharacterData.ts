@@ -5,7 +5,7 @@ export const CharacterDataJson = z.object({
   first_name: z.string(),
   last_name: z.string(),
   species: z.string(),
-  age: z.string(),
+  age: z.union([z.number(), z.string()]),
   gender: z.string(),
   role: z.string(),
   background: z.string(),
@@ -20,7 +20,7 @@ export class CharacterData {
   firstName: string;
   lastName: string;
   species: string;
-  age: string;
+  age: string | number;
   gender: string;
   role: string;
   background: string;
@@ -34,7 +34,7 @@ export class CharacterData {
     firstName: string,
     lastName: string,
     species: string,
-    age: string,
+    age: string | number,
     gender: string,
     role: string,
     background: string,
